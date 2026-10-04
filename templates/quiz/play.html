@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Level {{ level }}{% endblock %}
+{% block content %}
+<h2>Level {{ level }} <span id="timer" class="timer">00:00</span></h2>
+<form method="POST" class="form-card">
+    {% for q in questions %}
+    <div class="quiz-question">
+        <p><strong>Q{{ loop.index }}. {{ q.question }}</strong></p>
+        <label><input type="radio" name="q{{ q.id }}" value="A" required> {{ q.option_a }}</label>
+        <label><input type="radio" name="q{{ q.id }}" value="B"> {{ q.option_b }}</label>
+        <label><input type="radio" name="q{{ q.id }}" value="C"> {{ q.option_c }}</label>
+        <label><input type="radio" name="q{{ q.id }}" value="D"> {{ q.option_d }}</label>
+    </div>
+    {% else %}
+    <p>No questions in this level yet.</p>
+    {% endfor %}
+    <button type="submit" class="btn-primary">Submit Answers</button>
+</form>
+
+<script>
+let seconds = 0;
+setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    document.getElementById('timer').textContent = `${m}:${s}`;
+}, 1000);
+</script>
+{% endblock %}

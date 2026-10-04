@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Food Menu{% endblock %}
+{% block content %}
+<h2>Digital Food Menu</h2>
+<form method="POST" action="{{ url_for('service.place_order') }}" class="form-card">
+    <table class="data-table">
+        <thead><tr><th>Item</th><th>Category</th><th>Price</th><th>Qty</th></tr></thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                </td>
+                <td>{{ item.category }}</td>
+                <td>₹{{ item.price }}</td>
+                <td><input type="number" name="quantity" value="0" min="0" style="width:60px"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="btn-primary">Place Order</button>
+</form>
+<a href="{{ url_for('service.my_orders') }}" class="btn-secondary">View My Orders</a>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Reserve Room {{ room.room_number }}{% endblock %}
+{% block pagetitle %}Reserve your stay{% endblock %}
+{% block content %}
+<div class="booking-layout"><div class="reservation-visual"><div class="room-visual room-2 large"><span>{{ room.room_type|upper }}</span><b>{{ room.room_number }}</b><i>✦</i></div><div class="reservation-copy"><span class="eyebrow">YOUR AURA STAY</span><h1>{{ room.room_type }} Retreat</h1><p>Room {{ room.room_number }} · ₹{{ '%.0f'|format(room.price_per_night) }} per night</p><div class="amenities"><span>✦ Premium bed</span><span>⌁ Wi-Fi</span><span>♨ Room service</span></div></div></div>
+<div class="form-card reservation-card"><span class="eyebrow">SELECT DATES</span><h2>When will you arrive?</h2><p class="hint">Your total is calculated automatically after you choose the dates.</p><form method="POST"><label>Check-in</label><input type="date" name="check_in" min="{{ today }}" required><label>Check-out</label><input type="date" name="check_out" min="{{ today }}" required><button class="btn-primary btn-full" type="submit">Confirm reservation ↗</button></form></div></div>
+{% endblock %}

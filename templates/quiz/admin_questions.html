@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Manage Quiz Questions{% endblock %}
+{% block content %}
+<h2>⚙️ Manage Quiz Questions</h2>
+<form method="POST" class="form-card">
+    <label>Level</label>
+    <input type="number" name="level" min="1" value="1" required>
+    <label>Question</label>
+    <input type="text" name="question" required>
+    <label>Option A</label><input type="text" name="option_a" required>
+    <label>Option B</label><input type="text" name="option_b" required>
+    <label>Option C</label><input type="text" name="option_c" required>
+    <label>Option D</label><input type="text" name="option_d" required>
+    <label>Correct Option (A/B/C/D)</label>
+    <input type="text" name="correct_option" maxlength="1" required>
+    <button type="submit" class="btn-primary">Add Question</button>
+</form>
+
+<table class="data-table">
+    <thead><tr><th>Level</th><th>Question</th><th>Correct</th><th>Action</th></tr></thead>
+    <tbody>
+        {% for q in questions %}
+        <tr>
+            <td>{{ q.level }}</td>
+            <td>{{ q.question }}</td>
+            <td>{{ q.correct_option }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('quiz.delete_question', question_id=q.id) }}" class="inline-form">
+                    <button type="submit" class="btn-small btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Reviews & Feedback{% endblock %}
+{% block content %}
+<h2>Reviews & Feedback</h2>
+
+<div class="two-col">
+    <div class="form-card">
+        <h3>Leave a Review</h3>
+        <form method="POST" action="{{ url_for('review.add_review') }}">
+            <label>Rating (1-5)</label>
+            <select name="rating" required>
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Good</option>
+                <option value="3">3 - Average</option>
+                <option value="2">2 - Poor</option>
+                <option value="1">1 - Very Poor</option>
+            </select>
+            <label>Comment</label>
+            <textarea name="comment" rows="3"></textarea>
+            <button type="submit" class="btn-primary">Submit Review</button>
+        </form>
+    </div>
+
+    <div class="form-card">
+        <h3>Raise a Complaint</h3>
+        <form method="POST" action="{{ url_for('review.add_complaint') }}">
+            <label>Describe the issue</label>
+            <textarea name="description" rows="3" required></textarea>
+            <button type="submit" class="btn-primary">Submit Complaint</button>
+        </form>
+    </div>
+</div>
+
+<h3>Recent Reviews</h3>
+<div class="card-grid">
+    {% for r in reviews %}
+    <div class="item-card">
+        <p>{{ '⭐' * r.rating }}</p>
+        <p>{{ r.comment or "No comment" }}</p>
+        <p class="hint">— {{ r.guest.name }}</p>
+    </div>
+    {% else %}
+    <p>No reviews yet.</p>
+    {% endfor %}
+</div>
+
+<h3>My Complaints</h3>
+<table class="data-table">
+    <thead><tr><th>Description</th><th>Status</th></tr></thead>
+    <tbody>
+        {% for c in complaints %}
+        <tr><td>{{ c.description }}</td><td>{{ c.status }}</td></tr>
+        {% else %}
+        <tr><td colspan="2">No complaints raised.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

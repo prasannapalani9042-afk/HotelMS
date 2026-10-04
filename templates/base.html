@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}HotelMS Aura{% endblock %}</title>
+    <meta name="theme-color" content="#0b1020">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="{% if current_user.is_authenticated %}app-shell{% else %}auth-shell{% endif %}">
+
+{% if current_user.is_authenticated %}
+<aside class="sidebar" id="sidebar">
+    <div class="brand">
+        <div class="brandmark">H</div>
+        <div><h2>Hotel<span>MS</span></h2><small>AURA EXPERIENCE</small></div>
+    </div>
+    <div class="welcome-mini"><span class="pulse"></span> Hotel operations live</div>
+    <nav class="nav">
+        <a href="{{ url_for('auth.dashboard') }}" class="{{ 'active' if request.endpoint == 'auth.dashboard' }}"><i>⌂</i> Overview</a>
+        <a href="{{ url_for('booking.rooms') }}" class="{{ 'active' if request.blueprint == 'booking' }}"><i>▦</i> Stays & Rooms</a>
+        <a href="{{ url_for('service.menu') }}" class="{{ 'active' if request.blueprint == 'service' }}"><i>♨</i> Dining & Service</a>
+        <a href="{{ url_for('review.list_reviews') }}" class="{{ 'active' if request.blueprint == 'review' }}"><i>✦</i> Guest Voice</a>
+        <a href="{{ url_for('advanced.guest_hub') }}" class="{{ 'active' if request.endpoint == 'advanced.guest_hub' }}"><i>◎</i> Guest Hub</a>
+        <a href="{{ url_for('advanced.concierge') }}" class="{{ 'active' if request.endpoint == 'advanced.concierge' }}"><i>✧</i> Aura Concierge</a>
+        <a href="{{ url_for('quiz.quiz_home') }}" class="{{ 'active' if request.blueprint == 'quiz' }}"><i>◇</i> Experience Quiz</a>
+        {% if current_user.role in ['teacher', 'admin'] %}
+        <a href="{{ url_for('attendance.mark_attendance') }}" class="{{ 'active' if request.blueprint == 'attendance' }}"><i>◷</i> Attendance</a>
+        {% elif current_user.role == 'student' %}
+        <a href="{{ url_for('attendance.my_attendance') }}" class="{{ 'active' if request.blueprint == 'attendance' }}"><i>◷</i> My Attendance</a>
+        {% endif %}
+        {% if current_user.role == 'admin' %}
+        <div class="nav-label">ADMIN TOOLS</div>
+        <a href="{{ url_for('admin.control') }}" class="{{ 'active' if request.blueprint == 'admin' }}"><i>◈</i> Control Center</a>
+        <a href="{{ url_for('advanced.analytics') }}" class="{{ 'active' if request.endpoint == 'advanced.analytics' }}"><i>◉</i> Intelligence</a>
+        <a href="{{ url_for('housekeeping.board') }}" class="{{ 'active' if request.blueprint == 'housekeeping' }}"><i>✧</i> Housekeeping</a>
+        <a href="{{ url_for('quiz.manage_questions') }}"><i>⚙</i> Quiz Control</a>
+        <a href="{{ url_for('attendance.manage_subjects') }}"><i>⚙</i> Subjects</a>
+        {% endif %}
+    </nav>
+    <div class="sidebar-bottom">
+        <div class="mini-profile"><div class="avatar">{{ current_user.name[0]|upper }}</div><div><strong>{{ current_user.name }}</strong><small>{{ current_user.role|capitalize }} account</small></div></div>
+        <a class="logout" href="{{ url_for('auth.logout') }}">↗ Sign out</a>
+    </div>
+</aside>
+<main class="main">
+    <header class="topbar">
+        <div class="top-left"><button class="menu" id="menuBtn">☰</button><div><div class="date" id="date"></div><h3>{% block pagetitle %}Welcome back{% endblock %}</h3></div></div>
+        <div class="top-right"><div class="top-status"><span></span> Secure session</div><div class="avatar">{{ current_user.name[0]|upper }}</div></div>
+    </header>
+    <section class="content">
+{% else %}
+<main class="auth-wrapper">
+{% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash {% if not current_user.is_authenticated %}auth-flash {% endif %}flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {# IMPORTANT: content is defined exactly once. #}
+    {% block content %}{% endblock %}
+
+{% if current_user.is_authenticated %}
+    </section>
+    <footer>HotelMS Aura · Crafted for smarter hotel operations · 2026</footer>
+</main>
+{% else %}
+</main>
+{% endif %}
+
+{% if current_user.is_authenticated %}
+<script>
+const menuBtn=document.getElementById('menuBtn');
+if(menuBtn) menuBtn.onclick=()=>document.getElementById('sidebar').classList.toggle('open');
+const dateEl=document.getElementById('date');
+if(dateEl) dateEl.textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+</script>
+{% endif %}
+</body>
+</html>

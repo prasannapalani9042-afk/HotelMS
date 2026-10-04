@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Stays & Rooms{% endblock %}
+{% block pagetitle %}Stays & Rooms{% endblock %}
+{% block content %}
+<div class="page-intro"><div><span class="eyebrow">AURA STAYS</span><h1>Find your room.</h1><p>Choose a stay that matches your mood, dates and budget.</p></div><a href="{{ url_for('booking.my_bookings') }}" class="btn-ghost">My bookings →</a></div>
+<form class="search-strip" method="GET"><div><label>Check-in</label><input type="date" name="check_in" value="{{ check_in }}" min="{{ today if today is defined else '' }}"></div><div><label>Check-out</label><input type="date" name="check_out" value="{{ check_out }}" min="{{ today if today is defined else '' }}"></div><button class="btn-primary" type="submit">Check availability</button><a class="clear-link" href="{{ url_for('booking.rooms') }}">Clear</a></form>
+<div class="room-grid">
+{% for room in rooms %}<article class="room-card"><div class="room-visual room-{{ loop.index % 4 }}"><span>{{ room.room_type|upper }}</span><b>0{{ room.room_number }}</b><i>✦</i></div><div class="room-body"><div class="room-title"><div><h3>{{ room.room_type }} Retreat</h3><p>Room {{ room.room_number }} · Signature stay</p></div><strong>₹{{ '%.0f'|format(room.price_per_night) }}<small>/night</small></strong></div><div class="amenities"><span>✦ Premium bed</span><span>⌁ Wi-Fi</span><span>♨ Room service</span></div>{% if room.status == 'maintenance' %}<span class="status status-cancelled">Maintenance</span>{% elif room.id in available_ids %}<span class="status status-available">Available for selected dates</span><a href="{{ url_for('booking.book_room', room_id=room.id) }}" class="btn-primary btn-full">Reserve this room ↗</a>{% else %}<span class="status status-booked">Unavailable for selected dates</span>{% endif %}</div></article>{% endfor %}
+</div>
+{% endblock %}

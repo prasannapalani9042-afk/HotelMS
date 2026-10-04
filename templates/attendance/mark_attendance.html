@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Mark Attendance{% endblock %}
+{% block content %}
+<h2>📋 Mark Daily Attendance</h2>
+<form method="POST" class="form-card">
+    <label>Subject</label>
+    <select name="subject_id" required>
+        {% for s in subjects %}
+        <option value="{{ s.id }}">{{ s.name }}</option>
+        {% endfor %}
+    </select>
+    <label>Date</label>
+    <input type="date" name="date" required>
+
+    <table class="data-table">
+        <thead><tr><th>Student</th><th>Present</th><th>Absent</th></tr></thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.name }}</td>
+                <td><input type="radio" name="status_{{ student.id }}" value="present" checked></td>
+                <td><input type="radio" name="status_{{ student.id }}" value="absent"></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3">No students registered yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="btn-primary">Save Attendance</button>
+</form>
+<a href="{{ url_for('attendance.reports') }}" class="btn-secondary">View Reports</a>
+<a href="{{ url_for('attendance.manage_subjects') }}" class="btn-secondary">Manage Subjects</a>
+{% endblock %}

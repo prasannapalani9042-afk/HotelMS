@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Aura Overview{% endblock %}
+{% block pagetitle %}Hotel command center{% endblock %}
+{% block content %}
+<section class="hero-card">
+    <div class="hero-copy">
+        <span class="eyebrow">AURA / DAILY OVERVIEW</span>
+        <h1>Good to see you,<br><em>{{ user.name }}</em>.</h1>
+        <p>One elegant workspace for rooms, stays, dining, guest feedback and hotel operations.</p>
+        <div class="hero-actions"><a href="{{ url_for('booking.rooms') }}" class="btn-primary">Explore rooms ↗</a><a href="{{ url_for('service.menu') }}" class="btn-ghost">Open dining</a></div>
+    </div>
+    <div class="hero-orbit"><div class="orbit-ring"></div><div class="hero-symbol">H</div><span class="orbit-dot d1"></span><span class="orbit-dot d2"></span><span class="orbit-dot d3"></span></div>
+</section>
+
+<div class="section-heading"><div><span class="eyebrow">LIVE SNAPSHOT</span><h2>Today at a glance</h2></div><span class="role-chip">{{ user.role|capitalize }} mode</span></div>
+<div class="stats-grid">
+    <div class="stat-card"><span class="stat-icon">⌂</span><small>Total rooms</small><strong>{{ stats.rooms }}</strong><span class="stat-note">{{ stats.available }} ready now</span></div>
+    <div class="stat-card"><span class="stat-icon">◈</span><small>Active stays</small><strong>{{ stats.active_bookings }}</strong><span class="stat-note">{{ stats.today_checkins }} check-ins today</span></div>
+    <div class="stat-card"><span class="stat-icon">₹</span><small>Hotel revenue</small><strong>₹{{ '%.0f'|format(stats.revenue) }}</strong><span class="stat-note">Paid room + dining</span></div>
+    <div class="stat-card"><span class="stat-icon">✦</span><small>Guest voice</small><strong>{{ stats.reviews }}</strong><span class="stat-note">{{ stats.complaints }} open complaints</span></div>
+</div>
+
+<div class="section-heading"><div><span class="eyebrow">QUICK ACCESS</span><h2>Your experience hub</h2></div></div>
+<div class="feature-grid">
+    <a class="feature-card feature-gold" href="{{ url_for('booking.rooms') }}"><span>01</span><div><b>Stays & Rooms</b><p>Discover rooms and reserve by date.</p></div><strong>↗</strong></a>
+    <a class="feature-card feature-blue" href="{{ url_for('service.menu') }}"><span>02</span><div><b>Dining & Service</b><p>Order food and track room service.</p></div><strong>↗</strong></a>
+    <a class="feature-card feature-violet" href="{{ url_for('review.list_reviews') }}"><span>03</span><div><b>Guest Voice</b><p>Reviews, ratings and complaints.</p></div><strong>↗</strong></a>
+    <a class="feature-card feature-green" href="{{ url_for('quiz.quiz_home') }}"><span>04</span><div><b>Experience Quiz</b><p>Play, earn coins and climb the board.</p></div><strong>↗</strong></a>
+</div>
+
+{% if user.role == 'admin' %}
+<div class="section-heading"><div><span class="eyebrow">OPERATIONS</span><h2>Recent reservations</h2></div><a class="text-link" href="{{ url_for('booking.rooms') }}">View rooms →</a></div>
+<div class="glass-table"><table class="data-table"><thead><tr><th>Guest</th><th>Room</th><th>Stay</th><th>Payment</th><th>Status</th></tr></thead><tbody>
+{% for b in recent_bookings %}<tr><td><b>{{ b.guest.name }}</b><br><span class="muted">{{ b.guest.email }}</span></td><td>{{ b.room.room_number }} · {{ b.room.room_type }}</td><td>{{ b.check_in }} → {{ b.check_out }}</td><td><span class="status status-{{ b.payment_status }}">{{ b.payment_status }}</span></td><td><span class="status status-{{ b.status }}">{{ b.status }}</span></td></tr>{% else %}<tr><td colspan="5">No reservations yet.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard{% endblock %}
+{% block content %}
+<h2>🏆 Leaderboard</h2>
+<table class="data-table">
+    <thead><tr><th>#</th><th>Player</th><th>Level</th><th>Score</th><th>Coins</th></tr></thead>
+    <tbody>
+        {% for s in top_scores %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ s.user.name }}</td>
+            <td>{{ s.level }}</td>
+            <td>{{ s.score }}</td>
+            <td>{{ s.coins }} 🪙</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">No scores yet — be the first to play!</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>My Game History</h2>
+<table class="data-table">
+    <thead><tr><th>Level</th><th>Score</th><th>Coins</th><th>Time Taken</th><th>Date</th></tr></thead>
+    <tbody>
+        {% for h in my_history %}
+        <tr>
+            <td>{{ h.level }}</td>
+            <td>{{ h.score }}</td>
+            <td>{{ h.coins }}</td>
+            <td>{{ h.time_taken_seconds }}s</td>
+            <td>{{ h.completed_at.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">You haven't played yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

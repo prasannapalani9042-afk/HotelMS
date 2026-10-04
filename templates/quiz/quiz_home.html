@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Quiz Game{% endblock %}
+{% block content %}
+<h2>🎮 2D Adventure Quiz Game</h2>
+<p>Pick a level and test your knowledge. Score points, earn coins, and climb the leaderboard!</p>
+<div class="card-grid">
+    {% for level in levels %}
+    <div class="item-card">
+        <h3>Level {{ level }}</h3>
+        <a href="{{ url_for('quiz.play', level=level) }}" class="btn-primary">Play</a>
+    </div>
+    {% else %}
+    <p>No quiz levels available yet.</p>
+    {% endfor %}
+</div>
+<a href="{{ url_for('quiz.leaderboard') }}" class="btn-secondary">View Leaderboard</a>
+{% endblock %}

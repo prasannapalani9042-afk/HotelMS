@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Create Aura Account{% endblock %}
+{% block content %}
+<div class="auth-layout auth-layout-register">
+  <div class="auth-showcase"><span class="eyebrow">JOIN THE EXPERIENCE</span><h1>Your next stay<br><em>starts here.</em></h1><p>Create a guest account and explore smart booking, dining and personalised hotel services.</p><div class="showcase-pills"><span>Fast booking</span><span>Room service</span><span>Rewards quiz</span></div></div>
+  <div class="auth-card"><div class="brand auth-brand"><div class="brandmark">H</div><div><h2>Hotel<span>MS</span></h2><small>AURA EXPERIENCE</small></div></div><div class="auth-heading"><span class="eyebrow">NEW ACCOUNT</span><h2>Make it yours</h2><p>Register as a guest and get started.</p></div>
+    <form method="POST"><label>Full name</label><input type="text" name="name" placeholder="Your name" required><label>Email</label><input type="email" name="email" placeholder="you@example.com" required><label>Password</label><input type="password" name="password" placeholder="Create a password" minlength="6" required><input type="hidden" name="role" value="guest"><button type="submit" class="btn-primary btn-full">Create account ↗</button></form>
+    <p>Already a member? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+  </div>
+</div>
+{% endblock %}

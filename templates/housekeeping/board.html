@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Housekeeping · HotelMS Aura{% endblock %}
+{% block pagetitle %}Housekeeping board{% endblock %}
+{% block content %}
+<div class="section-heading"><div><span class="eyebrow">ROOM CARE / LIVE BOARD</span><h2>Turnover, cleaning & ready status</h2></div></div>
+<div class="admin-grid">
+<section class="panel"><div class="section-heading"><div><span class="eyebrow">NEW TASK</span><h2>Create room refresh</h2></div></div>
+<form class="hk-form" method="POST" action="{{ url_for('housekeeping.create_task') }}"><label>Room<select name="room_id" required>{% for room in rooms %}<option value="{{ room.id }}">{{ room.room_number }} · {{ room.room_type }}</option>{% endfor %}</select></label><label>Note<input name="note" value="Standard room refresh"></label><button class="btn-primary" type="submit">Create task</button></form>
+<div class="section-heading"><div><span class="eyebrow">TASK FLOW</span><h2>Current tasks</h2></div></div>
+<div class="hk-list">{% for task in tasks %}<div class="hk-row"><div><b>Room {{ task.room.room_number }}</b><span>{{ task.note }}</span></div><form method="POST" action="{{ url_for('housekeeping.update_status', task_id=task.id) }}"><select name="status" onchange="this.form.submit()"><option value="pending" {% if task.status=='pending' %}selected{% endif %}>Pending</option><option value="cleaning" {% if task.status=='cleaning' %}selected{% endif %}>Cleaning</option><option value="ready" {% if task.status=='ready' %}selected{% endif %}>Ready</option></select></form></div>{% else %}<p class="muted">No housekeeping tasks yet.</p>{% endfor %}</div>
+</section>
+<section class="panel"><span class="eyebrow">ROOM HEALTH</span><h2>Inventory pulse</h2><div class="health-stack">{% for room in rooms %}<div class="health-row"><span>{{ room.room_number }}</span><div><i class="health-fill {% if room.status=='maintenance' %}maintenance{% endif %}" style="width:{% if room.status=='maintenance' %}38{% else %}100{% endif %}%"></i></div><small>{{ room.status }}</small></div>{% endfor %}</div></section>
+</div>
+{% endblock %}

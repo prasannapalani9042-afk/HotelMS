@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}AURA Control Center{% endblock %}
+{% block pagetitle %}Control center{% endblock %}
+{% block content %}
+<section class="hero-card admin-hero">
+  <div class="hero-copy"><span class="eyebrow">ADMIN / COMMAND CENTER</span><h1>Run the hotel.<br><em>See everything.</em></h1><p>Rooms, stays, payments and operations in one live control surface.</p></div>
+  <div class="command-orb"><span>LIVE</span><strong>{{ metrics.stays }}</strong><small>active stays</small></div>
+</section>
+<div class="stats-grid">
+ <div class="stat-card"><small>Rooms online</small><strong>{{ metrics.rooms }}</strong><span class="stat-note">{{ metrics.ready }} ready · {{ metrics.maintenance }} maintenance</span></div>
+ <div class="stat-card"><small>Today's arrivals</small><strong>{{ metrics.today_checkins }}</strong><span class="stat-note">Prepare welcome desk</span></div>
+ <div class="stat-card"><small>Active stays</small><strong>{{ metrics.stays }}</strong><span class="stat-note">Live reservations</span></div>
+ <div class="stat-card"><small>Revenue</small><strong>₹{{ '%.0f'|format(metrics.revenue) }}</strong><span class="stat-note">Room + dining</span></div>
+</div>
+<div class="admin-grid">
+ <section class="panel"><div class="section-heading"><div><span class="eyebrow">ROOM CONTROL</span><h2>Live room board</h2></div></div>
+  <div class="room-board">{% for room in rooms %}<div class="room-tile"><div><b>{{ room.room_number }}</b><span>{{ room.room_type }}</span></div><span class="room-state state-{{ room.status }}">{{ room.status }}</span><form method="POST" action="{{ url_for('admin.update_room_status', room_id=room.id) }}"><select name="status" onchange="this.form.submit()"><option value="available" {% if room.status=='available' %}selected{% endif %}>Available</option><option value="maintenance" {% if room.status=='maintenance' %}selected{% endif %}>Maintenance</option></select></form></div>{% endfor %}</div>
+ </section>
+ <section class="panel"><div class="section-heading"><div><span class="eyebrow">FAST ACTIONS</span><h2>Operations</h2></div></div>
+  <div class="action-stack"><a href="{{ url_for('booking.rooms') }}" class="feature-card feature-gold"><span>01</span><div><b>Open room inventory</b><p>View guest-facing availability.</p></div><strong>↗</strong></a><a href="{{ url_for('service.menu') }}" class="feature-card feature-blue"><span>02</span><div><b>Dining service</b><p>Review the room-service flow.</p></div><strong>↗</strong></a><a href="{{ url_for('quiz.manage_questions') }}" class="feature-card feature-violet"><span>03</span><div><b>Manage quiz</b><p>Update experience questions.</p></div><strong>↗</strong></a></div>
+ </section>
+</div>
+<div class="section-heading"><div><span class="eyebrow">RECENT STAYS</span><h2>Reservation command feed</h2></div></div>
+<div class="glass-table"><table class="data-table"><thead><tr><th>Guest</th><th>Room</th><th>Stay</th><th>Payment</th><th>Actions</th></tr></thead><tbody>{% for b in bookings %}<tr><td><b>{{ b.guest.name }}</b><br><span class="muted">{{ b.guest.email }}</span></td><td>{{ b.room.room_number }} · {{ b.room.room_type }}</td><td>{{ b.check_in }} → {{ b.check_out }}</td><td><span class="status status-{{ b.payment_status }}">{{ b.payment_status }}</span></td><td><a class="text-link" href="{{ url_for('admin.invoice', booking_id=b.id) }}">Invoice</a>{% if b.status == 'confirmed' %} · <form class="inline-form" method="POST" action="{{ url_for('admin.complete_booking', booking_id=b.id) }}"><button class="link-button">Complete</button></form>{% endif %}</td></tr>{% else %}<tr><td colspan="5">No reservations yet.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}
